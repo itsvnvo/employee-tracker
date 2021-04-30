@@ -1,6 +1,6 @@
 const mysql2 = require('mysql2');
 const inquirer = require('inquirer');
-
+const cTable = require('console.table');
 
 
 const connection = mysql2.createConnection({
@@ -25,8 +25,8 @@ const init = () => {
             message: 'What would you like to do?',
             choices: [
                 'Add a department',
-                'Add employee',
                 'Add roles',
+                'Add employee',
                 'View Departments',
                 'View Roles',
                 'View Employees',
@@ -40,12 +40,12 @@ const init = () => {
                     addDeparment();
                     break;
 
-                case 'Add employee':
-                    addEmployee();
-                    break;
-
                 case 'Add roles':
                     addRole();
+                    break;
+
+                case 'Add employee':
+                    addEmployee();
                     break;
 
                 case 'View Departments':
@@ -177,22 +177,25 @@ const addRole = () => {
 };
 
 const viewEmployees = () => {
-    connection.query("SELECT * FROM employee_listDB.employees;", function (err, res) {
+    connection.query("SELECT * FROM employee_listDB.employees;", (err, res) => {
         if (err) throw err;
         console.table(res)
+        init();
     });
 }
 
 const viewRoles = () => {
-    connection.query("SELECT * FROM employee_listDB.roles;", function (err, res) {
+    connection.query("SELECT * FROM employee_listDB.roles;", (err, res) => {
         if (err) throw err;
         console.table(res)
+        init();
     });
 }
 
 const viewDeparment = () => {
-    connection.query("SELECT * FROM employee_listDB.department;", function (err, res) {
+    connection.query(`SELECT * FROM employee_listDB.department;`, (err, res) => {
         if (err) throw err;
         console.table(res)
+        init();
     });
 }
