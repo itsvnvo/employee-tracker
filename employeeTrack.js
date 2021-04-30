@@ -176,8 +176,54 @@ const addRole = () => {
         });
 };
 
+const updateEmployee = () => {
+
+    connection.query('SELECT * FROM employees', (err, res) => {
+        if (err) throw err;
+
+        inquirer
+            .prompt([
+                {
+                    name: "lastName",
+                    type: "rawlist",
+                    choices() {
+                        let lastNameArr = [];
+                        res.forEach(({ last_name }) => {
+                            lastNameArr.push(last_name);
+                        })
+                        return lastNameArr;
+                    },
+                    message: 'Which employee would you like to change?',
+                },
+                {
+                    name: "newRole",
+                    type: "input",
+                    message: "What role ID would you like to change it to?",
+                }
+            ]).
+            then((answer) => {
+                const emp = `SELECT * FROM employee_listDB.employees;`
+                connection.query('UPDATE employees SET ? WHERE ?',
+                    [
+                        {
+                            role_id: answer.newRole,
+                        },
+                        {
+                            last_name: answer.lastName
+                        }
+                    ],
+                    (err) => {
+                        if (err) throw err;
+                        console.log('You updated your employee!');
+                        init();
+                    }
+                );
+            });
+    });
+};
+
 const viewEmployees = () => {
-    connection.query("SELECT * FROM employee_listDB.employees;", (err, res) => {
+    connection.query(`SELECT * FROM employee_listDB.employees;`, (err, res) => {
         if (err) throw err;
         console.table(res)
         init();
@@ -185,7 +231,7 @@ const viewEmployees = () => {
 }
 
 const viewRoles = () => {
-    connection.query("SELECT * FROM employee_listDB.roles;", (err, res) => {
+    connection.query(`SELECT * FROM employee_listDB.roles;`, (err, res) => {
         if (err) throw err;
         console.table(res)
         init();
@@ -199,3 +245,4 @@ const viewDeparment = () => {
         init();
     });
 }
+
