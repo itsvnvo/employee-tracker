@@ -222,6 +222,7 @@ const updateEmployee = () => {
     });
 };
 
+
 const viewEmployees = () => {
     connection.query(`SELECT * FROM employee_listDB.employees;`, (err, res) => {
         if (err) throw err;
